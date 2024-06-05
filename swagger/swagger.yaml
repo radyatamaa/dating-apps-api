@@ -1,0 +1,648 @@
+basePath: /api
+definitions:
+  domain.GetProfilesResponse:
+    properties:
+      age:
+        type: integer
+      bio:
+        type: string
+      distance:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      photo:
+        type: string
+      verified:
+        type: boolean
+    type: object
+  domain.GetProfilesResponsePaginationResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/domain.GetProfilesResponse'
+        type: array
+      paginator:
+        $ref: '#/definitions/paginator.MetaPaginatorResponse'
+    type: object
+  domain.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  domain.LoginResponse:
+    properties:
+      expired_at:
+        type: string
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/domain.UserLogin'
+    type: object
+  domain.SwipeProfileRequest:
+    properties:
+      profile_id:
+        type: integer
+      swipe_type:
+        type: string
+    required:
+    - profile_id
+    - swipe_type
+    type: object
+  domain.UpdateLiveLocationProfilesRequest:
+    properties:
+      latitude:
+        type: number
+      longitude:
+        type: number
+    type: object
+  domain.UserLogin:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+    type: object
+  paginator.MetaPaginatorResponse:
+    properties:
+      back_page:
+        type: integer
+      current_page:
+        type: integer
+      default_page_size:
+        type: integer
+      label_pages:
+        type: string
+      limit_per_page:
+        type: integer
+      next_page:
+        type: integer
+      page_sizes:
+        items:
+          type: integer
+        type: array
+      total_pages:
+        type: integer
+      total_records:
+        type: integer
+    type: object
+  swagger.BadRequestErrorValidationResponse:
+    properties:
+      code:
+        example: KDMU-02-006
+        type: string
+      data: {}
+      errors: {}
+      message:
+        example: permintaan tidak valid, kesalahan muncul ketika permintaan Anda memiliki
+          parameter yang tidak valid.
+        type: string
+      request_id:
+        example: 24fa3770-628c-49de-aa17-3a338f73d99b
+        type: string
+      timestamp:
+        example: "2022-04-27 23:19:56"
+        type: string
+    type: object
+  swagger.BaseResponse:
+    properties:
+      code:
+        example: OK
+        type: string
+      data: {}
+      errors: {}
+      message:
+        example: operasi berhasil dieksekusi.
+        type: string
+      request_id:
+        example: 24fa3770-628c-49de-aa17-3a338f73d99b
+        type: string
+      timestamp:
+        example: "2022-04-27 23:19:56"
+        type: string
+    type: object
+  swagger.InternalServerErrorResponse:
+    properties:
+      code:
+        example: KDMU-02-008
+        type: string
+      data: {}
+      errors: {}
+      message:
+        example: terjadi kesalahan, silakan hubungi administrator.
+        type: string
+      request_id:
+        example: 24fa3770-628c-49de-aa17-3a338f73d99b
+        type: string
+      timestamp:
+        example: "2022-04-27 23:19:56"
+        type: string
+    type: object
+  swagger.RequestTimeoutResponse:
+    properties:
+      code:
+        example: KDMU-02-009
+        type: string
+      data: {}
+      errors: {}
+      message:
+        example: permintaan telah melampaui batas waktu, harap request kembali.
+        type: string
+      request_id:
+        example: 24fa3770-628c-49de-aa17-3a338f73d99b
+        type: string
+      timestamp:
+        example: "2022-04-27 23:19:56"
+        type: string
+    type: object
+  swagger.ValidationErrors:
+    properties:
+      field:
+        example: MobilePhone wajib diisi.
+        type: string
+      message:
+        example: ActiveDate harus format yang benar yyyy-mm-dd.
+        type: string
+    type: object
+info:
+  contact:
+    email: mohradyatama24@gmail.com
+    name: radyatama
+  description: api "API Gateway v1"
+  title: Api Gateway V1
+  version: v1
+paths:
+  /v1/profile:
+    get:
+      parameters:
+      - description: lang
+        in: header
+        name: Accept-Language
+        type: string
+      - description: page size
+        in: query
+        name: pageSize
+        type: integer
+      - description: page
+        in: query
+        name: page
+        type: integer
+      - description: current latitude
+        in: query
+        name: latitude
+        type: number
+      - description: current longitude
+        in: query
+        name: longitude
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.BaseResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.GetProfilesResponsePaginationResponse'
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.BadRequestErrorValidationResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    $ref: '#/definitions/swagger.ValidationErrors'
+                  type: array
+              type: object
+        "408":
+          description: Request Timeout
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.RequestTimeoutResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.InternalServerErrorResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: GetProfiles
+      tags:
+      - Profile
+  /v1/profile/location:
+    put:
+      parameters:
+      - description: lang
+        in: header
+        name: Accept-Language
+        type: string
+      - description: request payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateLiveLocationProfilesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.BaseResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.BadRequestErrorValidationResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    $ref: '#/definitions/swagger.ValidationErrors'
+                  type: array
+              type: object
+        "408":
+          description: Request Timeout
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.RequestTimeoutResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.InternalServerErrorResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: UpdateLiveLocationProfiles
+      tags:
+      - Profile
+  /v1/swipe/profile:
+    post:
+      parameters:
+      - description: lang
+        in: header
+        name: Accept-Language
+        type: string
+      - description: request payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SwipeProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.BaseResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.BadRequestErrorValidationResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    $ref: '#/definitions/swagger.ValidationErrors'
+                  type: array
+              type: object
+        "408":
+          description: Request Timeout
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.RequestTimeoutResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.InternalServerErrorResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: SwipeProfile
+      tags:
+      - Swipe
+  /v1/user/login:
+    post:
+      parameters:
+      - description: lang
+        in: header
+        name: Accept-Language
+        type: string
+      - description: request payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.BaseResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.LoginResponse'
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.BadRequestErrorValidationResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    $ref: '#/definitions/swagger.ValidationErrors'
+                  type: array
+              type: object
+        "408":
+          description: Request Timeout
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.RequestTimeoutResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.InternalServerErrorResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+      summary: Login
+      tags:
+      - User
+  /v1/user/purchase-premium:
+    post:
+      parameters:
+      - description: lang
+        in: header
+        name: Accept-Language
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.BaseResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.BadRequestErrorValidationResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    $ref: '#/definitions/swagger.ValidationErrors'
+                  type: array
+              type: object
+        "408":
+          description: Request Timeout
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.RequestTimeoutResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.InternalServerErrorResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: PurchasePremiumUpdateStatus
+      tags:
+      - User
+  /v1/user/register:
+    post:
+      parameters:
+      - description: lang
+        in: header
+        name: Accept-Language
+        type: string
+      - description: file
+        in: formData
+        name: photo
+        required: true
+        type: file
+      - description: name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: age
+        in: formData
+        name: age
+        required: true
+        type: integer
+      - description: bio
+        in: formData
+        name: bio
+        required: true
+        type: string
+      - description: email
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: password
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.BaseResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.BadRequestErrorValidationResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    $ref: '#/definitions/swagger.ValidationErrors'
+                  type: array
+              type: object
+        "408":
+          description: Request Timeout
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.RequestTimeoutResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/swagger.InternalServerErrorResponse'
+            - properties:
+                data:
+                  type: object
+                errors:
+                  items:
+                    type: object
+                  type: array
+              type: object
+      summary: Register
+      tags:
+      - User
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
