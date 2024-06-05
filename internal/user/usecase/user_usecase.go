@@ -137,18 +137,12 @@ func (r userUseCase) PurchasePremiumUpdateStatus(beegoCtx *beegoContext.Context)
 		return err
 	}
 
-	if err = r.mysqlUserRepository.DB().Transaction(func(tx *gorm.DB) error {
-		err = r.mysqlUserRepository.UpdateSelectedFieldWithTx(ctx,tx,[]string{}, map[string]interface{}{
-			"premium_expires_at" : time.Now().AddDate(0,1,0),
-			"updated_at" : time.Now(),
-		},userSingle.ID)
-		if err != nil {
-			beegoCtx.Input.SetData("stackTrace", r.zapLogger.SetMessageLog(err))
-			return err
-		}
-
-		return nil
-	}); err != nil {
+	err = r.mysqlUserRepository.UpdateSelectedField(ctx,[]string{"premium_expires_at","updated_at"}, map[string]interface{}{
+		"premium_expires_at" : time.Now().AddDate(0,1,0),
+		"updated_at" : time.Now(),
+	},userSingle.ID)
+	if err != nil {
+		beegoCtx.Input.SetData("stackTrace", r.zapLogger.SetMessageLog(err))
 		return err
 	}
 
