@@ -50,6 +50,12 @@ func (a userUseCase) singleUserWithFilter(ctx context.Context, filter []string, 
 		[]string{
 			"users.*",
 			"profile.id as profile_id",
+			"profile.name as name",
+			"profile.photo as photo",
+			"profile.age as age",
+			"profile.bio as bio",
+			"profile.longitude as longitude",
+			"profile.latitude as latitude",
 		},
 		[]string{
 			"INNER JOIN profile ON profile.user_id = users.id",
@@ -125,7 +131,7 @@ func (r userUseCase) PurchasePremiumUpdateStatus(beegoCtx *beegoContext.Context)
 
 	userLogin := beegoCtx.Request.Context().Value("JWT_PAYLOAD").(jwt.Payload)
 
-	userSingle, err := r.singleUserWithFilter(ctx, []string{"id = ?"}, userLogin["uid"].(float64))
+	userSingle, err := r.singleUserWithFilter(ctx, []string{"users.id = ?"}, userLogin["uid"].(float64))
 	if err != nil {
 		beegoCtx.Input.SetData("stackTrace", r.zapLogger.SetMessageLog(err))
 		return err
@@ -134,15 +140,6 @@ func (r userUseCase) PurchasePremiumUpdateStatus(beegoCtx *beegoContext.Context)
 	if err = r.mysqlUserRepository.DB().Transaction(func(tx *gorm.DB) error {
 		err = r.mysqlUserRepository.UpdateSelectedFieldWithTx(ctx,tx,[]string{}, map[string]interface{}{
 			"premium_expires_at" : time.Now().AddDate(0,1,0),
-			"updated_at" : time.Now(),
-		},userSingle.ID)
-		if err != nil {
-			beegoCtx.Input.SetData("stackTrace", r.zapLogger.SetMessageLog(err))
-			return err
-		}
-
-		err = r.mysqlProfileRepository.UpdateSelectedFieldWithTx(ctx,tx,[]string{}, map[string]interface{}{
-			"verified" : true,
 			"updated_at" : time.Now(),
 		},userSingle.ID)
 		if err != nil {

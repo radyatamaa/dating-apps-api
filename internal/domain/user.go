@@ -40,6 +40,12 @@ type UserQueryWithProfile struct {
 	CreatedAt       time.Time `gorm:"column:created_at"`
 	UpdatedAt       time.Time `gorm:"column:updated_at"`
 	ProfileId 		int `gorm:"column:profile_id"`
+	Name     string `gorm:"type:varchar(255);column:name"`
+	Photo    string `gorm:"type:text;column:photo"`
+	Age      int    `gorm:"column:age"`
+	Bio      string `gorm:"type:text;column:bio"`
+	Longitude float64 `gorm:"column:longitude"`
+	Latitude  float64 `gorm:"column:latitude"`
 }
 
 // TableName name of table
@@ -52,7 +58,7 @@ func (r UserQueryWithProfile) TableName() string {
 // Requests
 type LoginRequest struct {
 	Email    string `json:"email" validate:"required"`
-	Password string `json:"password"  validate:"required"`
+	Password string `json:"password" validate:"required"`
 }
 
 type RegisterRequest struct {
@@ -75,6 +81,13 @@ type LoginResponse struct {
 type UserLogin struct {
 	Id          int    `json:"id"`
 	Email       string `json:"email"`
+	Name     string `json:"name"`
+	Photo    string `json:"photo"`
+	Age      int `json:"age"`
+	Bio      string `json:"bio"`
+	Longitude float64 `json:"longitude"`
+	Latitude  float64 `json:"latitude"`
+	Verified bool `json:"verified"`
 }
 //////////////////////////
 
@@ -83,6 +96,13 @@ func FromUserToUserLogin(data *UserQueryWithProfile) UserLogin {
 	return UserLogin{
 		Id:    data.ID,
 		Email: data.Email,
+		Name   : data.Name,
+		Photo   : data.Photo,
+		Age     : data.Age,
+		Bio     : data.Bio,
+		Longitude : data.Longitude,
+		Latitude  : data.Latitude,
+		Verified: IsPremium(data.PremiumExpiresAt),
 	}
 }
 

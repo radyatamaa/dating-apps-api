@@ -117,7 +117,7 @@ func SeederDataUserProfile(db *gorm.DB) {
 			UserID:    dataUser.ID,
 			Name:      helper.GenerateRandomString(15),
 			Photo:     "https://fastly.picsum.photos/id/660/536/354.jpg?hmac=rleJ6NCajocyX8aMHVw-b2M6nmTjnUV56Y2YKnxmkG4",
-			Age:       15,
+			Age:       21,
 			Bio:       "dummy",
 			Latitude: latitude,
 			Longitude: longitude,
