@@ -86,20 +86,6 @@ func (s swipeUseCase) checkDailySwipeQuota(beegoCtx *beegoContext.Context,userId
 
 
 }
-func (a swipeUseCase) singleProfileWithFilter(ctx context.Context, filter []string, args ...interface{}) (*domain.Profile, error) {
-	var entity domain.Profile
-	if err := a.mysqlUserRepository.SingleWithFilter(
-		ctx,
-		[]string{
-			"*",
-		},
-		[]string{},
-		filter,
-		&entity, args...); err != nil {
-		return nil, err
-	}
-	return &entity, nil
-}
 func (s swipeUseCase) SwipeProfile(beegoCtx *beegoContext.Context, request domain.SwipeProfileRequest) error {
 	ctx, cancel := context.WithTimeout(beegoCtx.Request.Context(), s.contextTimeout)
 	defer cancel()
