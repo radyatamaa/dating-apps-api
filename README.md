@@ -143,7 +143,7 @@ this app using auto migration by `gorm` , so you dont need create table as manua
 
 ### Swagger UI:
 http://localhost:8082/swagger/index.html
-![swagger-image](https://github.com/radyatamaa/dating-apps-api/swagger-image.png)
+![swagger-image](https://github.com/radyatamaa/dating-apps-api/blob/dev/swagger-image.png)
 
 ### More about app details test & additional information:
-![documentation](https://github.com/radyatamaa/dating-apps-api/document-app.pdf)
+[documentation](https://github.com/radyatamaa/dating-apps-api/blob/dev/document-app.pdf)
