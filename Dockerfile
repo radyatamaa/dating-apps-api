@@ -1,7 +1,7 @@
 ################
 # BUILD BINARY #
 ################
-FROM golang:1.17-alpine AS builder
+FROM golang:1.16-alpine AS builder
 
 # Install git + SSL ca certificates.
 # Git is required for fetching the dependencies.
