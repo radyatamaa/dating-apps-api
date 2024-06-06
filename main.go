@@ -40,11 +40,11 @@ import (
 	swipeRepository "github.com/radyatamaa/dating-apps-api/internal/swipe/repository"
 )
 
-// @title Api Gateway V1
+// @title Dating App Api V1
 // @version v1
 // @contact.name radyatama
 // @contact.email mohradyatama24@gmail.com
-// @description api "API Gateway v1"
+// @description api "Dating App Api v1"
 // @BasePath /api
 // @query.collection.format multi
 // @securityDefinitions.apikey ApiKeyAuth

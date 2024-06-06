@@ -941,11 +941,32 @@ var doc = `{
         "domain.UserLogin": {
             "type": "object",
             "properties": {
+                "age": {
+                    "type": "integer"
+                },
+                "bio": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "photo": {
+                    "type": "string"
+                },
+                "verified": {
+                    "type": "boolean"
                 }
             }
         },
@@ -1114,8 +1135,8 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "",
 	BasePath:    "/api",
 	Schemes:     []string{},
-	Title:       "Api Gateway V1",
-	Description: "api \"API Gateway v1\"",
+	Title:       "Dating App Api V1",
+	Description: "api \"Dating App Api v1\"",
 }
 
 type s struct{}

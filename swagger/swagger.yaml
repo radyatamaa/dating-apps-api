@@ -64,10 +64,24 @@ definitions:
     type: object
   domain.UserLogin:
     properties:
+      age:
+        type: integer
+      bio:
+        type: string
       email:
         type: string
       id:
         type: integer
+      latitude:
+        type: number
+      longitude:
+        type: number
+      name:
+        type: string
+      photo:
+        type: string
+      verified:
+        type: boolean
     type: object
   paginator.MetaPaginatorResponse:
     properties:
@@ -174,8 +188,8 @@ info:
   contact:
     email: mohradyatama24@gmail.com
     name: radyatama
-  description: api "API Gateway v1"
-  title: Api Gateway V1
+  description: api "Dating App Api v1"
+  title: Dating App Api V1
   version: v1
 paths:
   /v1/profile:
