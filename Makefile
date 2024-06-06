@@ -6,3 +6,7 @@ run:
 
 stop:
 	docker compose -f "docker-compose.yml" down
+
+test: 
+	go test ./... -coverprofile=coverage.out
+	go tool cover -html=coverage.out
